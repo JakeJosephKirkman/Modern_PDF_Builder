@@ -41,7 +41,7 @@ const ConfigBanner: React.FC = () => {
           <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
             <p className="text-blue-400 text-sm">
               <strong>CORS Note:</strong> If you encounter CORS errors, make sure to add your site's origin 
-              in the n8n Webhook node settings under "Allowed Origins" and enable POST/OPTIONS methods.
+              in the n8n Webhook node settings under "Allowed Origins\" and enable POST/OPTIONS methods.
             </p>
           </div>
           
