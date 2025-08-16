@@ -1,6 +1,6 @@
 import { PDFPayload } from '../types';
 
-export const generatePDF = async (payload: PDFPayload): Promise<void> => {
+export const generatePDF = async (payload: PDFPayload): Promise<Blob> => {
   const webhookUrl = 'https://n8n-93c3.onrender.com/webhook-test/59e8c7f0-f24f-47f8-b263-da82042e978d';
 
   // Convert payload to URL parameters for GET request
@@ -35,7 +35,15 @@ export const generatePDF = async (payload: PDFPayload): Promise<void> => {
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
-    // Request sent successfully, webhook will handle the response
+    // Get the PDF blob from the response
+    const blob = await response.blob();
+    
+    // Verify it's a PDF
+    if (blob.type !== 'application/pdf' && !blob.type.includes('pdf')) {
+      throw new Error('Response is not a PDF file');
+    }
+    
+    return blob;
   } catch (error) {
     if (error instanceof Error) {
       throw error;

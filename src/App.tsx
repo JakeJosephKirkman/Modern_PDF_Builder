@@ -54,11 +54,21 @@ function App() {
     };
 
     try {
-      await generatePDF(payload);
+      const pdfBlob = await generatePDF(payload);
+      
+      // Create download link
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${state.title || 'document'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       
       updateState({ 
         isGenerating: false, 
-        success: 'PDF generation request sent successfully! You will receive the PDF via the response webhook.' 
+        success: `PDF ready! Downloaded as "${state.title || 'document'}.pdf"` 
       });
       
       // Clear success message after 5 seconds
@@ -196,7 +206,7 @@ function App() {
               {state.isGenerating ? (
                 <span className="flex items-center justify-center gap-3">
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Sending request…
+                  Assembling your PDF…
                 </span>
               ) : (
                 'Generate PDF'
