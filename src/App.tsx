@@ -4,8 +4,6 @@ import { AppState, PDFPayload } from './types';
 import { generatePDF, downloadBlob } from './utils/pdfGenerator';
 import ImagePicker from './components/ImagePicker';
 import OptionsPanel from './components/OptionsPanel';
-import Preview from './components/Preview';
-import ConfigBanner from './components/ConfigBanner';
 
 function App() {
   const [state, setState] = useState<AppState>({
@@ -27,12 +25,9 @@ function App() {
     success: null,
   });
 
-  const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
-  const isConfigured = Boolean(webhookUrl);
-
   // Validation
   const isDescriptionValid = state.description.length >= 20 && state.description.length <= 10000;
-  const canGenerate = isDescriptionValid && !state.isGenerating && isConfigured;
+  const canGenerate = isDescriptionValid && !state.isGenerating;
 
   const updateState = useCallback((updates: Partial<AppState>) => {
     setState(prev => ({ ...prev, ...updates }));
@@ -127,9 +122,6 @@ function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Configuration Banner */}
-        {!isConfigured && <ConfigBanner />}
-
         {/* Success/Error Messages */}
         <div aria-live="polite" className="mb-6">
           {state.success && (
@@ -146,7 +138,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8">
           {/* Left Column - Description */}
           <div className="lg:col-span-1">
             <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6">
@@ -186,7 +178,7 @@ function App() {
             </div>
           </div>
 
-          {/* Middle Column - Images & Options */}
+          {/* Right Column - Images & Options */}
           <div className="lg:col-span-1 space-y-8">
             {/* Images */}
             <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6">
@@ -204,13 +196,6 @@ function App() {
                 title={state.title}
                 onTitleChange={handleTitleChange}
               />
-            </div>
-          </div>
-
-          {/* Right Column - Preview */}
-          <div className="lg:col-span-1">
-            <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6 sticky top-8">
-              <Preview content={state.description} />
             </div>
           </div>
         </div>
@@ -240,9 +225,7 @@ function App() {
             
             {!canGenerate && !state.isGenerating && (
               <p id="generate-help" className="text-center text-sm text-[#8A8A8A] mt-2">
-                {!isConfigured 
-                  ? 'Configure your n8n webhook URL first'
-                  : !isDescriptionValid 
+                {!isDescriptionValid 
                     ? 'Add a description (20-10,000 characters)'
                     : 'Ready to generate'
                 }

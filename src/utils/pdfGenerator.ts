@@ -1,20 +1,11 @@
 import { PDFPayload } from '../types';
 
 export const generatePDF = async (payload: PDFPayload): Promise<Blob> => {
-  const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
-  const token = import.meta.env.VITE_PDF_TOKEN;
-
-  if (!webhookUrl) {
-    throw new Error('VITE_N8N_WEBHOOK_URL environment variable is not set');
-  }
+  const webhookUrl = 'https://n8n-93c3.onrender.com/webhook-test/59e8c7f0-f24f-47f8-b263-da82042e978d';
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
-
-  if (token) {
-    headers['X-PDF-Token'] = token;
-  }
 
   try {
     const response = await fetch(webhookUrl, {
