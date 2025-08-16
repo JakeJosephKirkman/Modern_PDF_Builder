@@ -42,8 +42,8 @@ const PDFBuilder: React.FC = () => {
   };
 
   const handleGeneratePDF = async () => {
-    if (!content.text.trim() && content.images.length === 0) {
-      alert('Please add some content or images before generating the PDF.');
+    if (!content.text.trim()) {
+      alert('Please add some text content before generating the PDF.');
       return;
     }
 
@@ -59,7 +59,7 @@ const PDFBuilder: React.FC = () => {
     }
   };
 
-  const canGeneratePDF = content.text.trim().length > 0 || content.images.length > 0;
+  const canGeneratePDF = content.text.trim().length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0D0D0D] to-[#1A1A1A]">
@@ -120,7 +120,7 @@ const PDFBuilder: React.FC = () => {
               
               {!canGeneratePDF && (
                 <p className="text-sm text-[#8A8A8A] text-center">
-                  Add some text content or upload images to generate your PDF
+                  Add some text content to generate your PDF
                 </p>
               )}
             </div>

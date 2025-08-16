@@ -51,7 +51,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesAdd, onImageR
     <div className="space-y-4">
       <label className="block text-sm font-semibold text-gray-700 mb-2">
         <label className="block text-sm font-semibold text-[#E0E0E0] mb-2">
-          Upload Images
+          Upload Images (Optional)
         </label>
       </label>
       

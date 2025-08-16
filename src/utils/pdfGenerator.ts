@@ -19,7 +19,7 @@ export const generatePDF = async (content: PDFContent): Promise<void> => {
   const webhookUrl = 'https://n8n-93c3.onrender.com/webhook-test/59e8c7f0-f24f-47f8-b263-da82042e978d';
   
   try {
-    // Prepare the payload for the webhook
+    // Prepare the payload for the webhook - only send to n8n webhook
     const payload = {
       text: content.text,
       formatting: content.formatting,
@@ -31,7 +31,7 @@ export const generatePDF = async (content: PDFContent): Promise<void> => {
       }))
     };
 
-    // Send the content to the webhook
+    // Send the content exclusively to the n8n webhook
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
@@ -41,14 +41,14 @@ export const generatePDF = async (content: PDFContent): Promise<void> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Webhook request failed: ${response.status} ${response.statusText}`);
+      throw new Error(`N8N webhook request failed: ${response.status} ${response.statusText}`);
     }
 
-    // Check if the response contains a PDF blob or download URL
+    // Handle the response from n8n webhook
     const contentType = response.headers.get('content-type');
     
     if (contentType && contentType.includes('application/pdf')) {
-      // If the webhook returns a PDF directly, download it
+      // If n8n returns a PDF directly, download it
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -59,18 +59,18 @@ export const generatePDF = async (content: PDFContent): Promise<void> => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } else {
-      // If the webhook returns JSON with a download URL
+      // If n8n returns JSON with a download URL or success message
       const result = await response.json();
       if (result.downloadUrl) {
         window.open(result.downloadUrl, '_blank');
       } else {
-        console.log('PDF generation completed:', result);
-        alert('PDF has been generated successfully!');
+        console.log('PDF generation completed via n8n:', result);
+        alert('PDF has been generated successfully via n8n!');
       }
     }
     
   } catch (error) {
-    console.error('Error generating PDF via webhook:', error);
-    throw new Error('Failed to generate PDF. Please try again.');
+    console.error('Error generating PDF via n8n webhook:', error);
+    throw new Error('Failed to generate PDF via n8n. Please try again.');
   }
 };
