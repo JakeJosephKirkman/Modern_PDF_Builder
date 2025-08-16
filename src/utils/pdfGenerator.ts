@@ -14,16 +14,17 @@ export const generatePDF = async (payload: PDFPayload): Promise<Blob> => {
   const fullUrl = `${webhookUrl}?${params.toString()}`;
 
   try {
-    const response = await fetch(fullUrl, {
+    // First, call the webhook to get the PDF URL
+    const webhookResponse = await fetch(fullUrl, {
       method: 'GET',
       mode: 'cors',
       credentials: 'omit',
     });
 
-    if (!response.ok) {
+    if (!webhookResponse.ok) {
       let errorText = '';
       try {
-        errorText = await response.text();
+        errorText = await webhookResponse.text();
         // Limit error text to first 300 characters
         if (errorText.length > 300) {
           errorText = errorText.substring(0, 300) + '...';
@@ -32,11 +33,29 @@ export const generatePDF = async (payload: PDFPayload): Promise<Blob> => {
         errorText = 'No additional error details available';
       }
 
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
+      throw new Error(`HTTP ${webhookResponse.status}: ${errorText}`);
     }
 
-    // Get the PDF blob from the response
-    const blob = await response.blob();
+    // Parse the JSON response to get the PDF URL
+    const responseData = await webhookResponse.json();
+    
+    if (!responseData.url) {
+      throw new Error('No PDF URL found in webhook response');
+    }
+    
+    // Now download the PDF from the provided URL
+    const pdfResponse = await fetch(responseData.url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+    });
+    
+    if (!pdfResponse.ok) {
+      throw new Error(`Failed to download PDF: HTTP ${pdfResponse.status}`);
+    }
+    
+    // Get the PDF blob from the download URL
+    const blob = await pdfResponse.blob();
     
     // Verify it's a PDF
     if (blob.type !== 'application/pdf' && !blob.type.includes('pdf')) {
