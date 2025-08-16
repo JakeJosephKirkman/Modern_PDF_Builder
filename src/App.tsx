@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { FileText, Zap, Loader2 } from 'lucide-react';
 import { AppState, PDFPayload } from './types';
-import { generatePDF, downloadBlob } from './utils/pdfGenerator';
+import { generatePDF } from './utils/pdfGenerator';
 import ImagePicker from './components/ImagePicker';
 import OptionsPanel from './components/OptionsPanel';
 
@@ -9,16 +9,6 @@ function App() {
   const [state, setState] = useState<AppState>({
     description: '',
     images: [],
-    options: {
-      pageSize: 'A4',
-      orientation: 'portrait',
-      margins: {
-        top: '20mm',
-        right: '15mm',
-        bottom: '20mm',
-        left: '15mm',
-      },
-    },
     title: '',
     isGenerating: false,
     error: null,
@@ -47,11 +37,6 @@ function App() {
     updateState({ images });
   }, [updateState, clearMessages]);
 
-  const handleOptionsChange = useCallback((options: AppState['options']) => {
-    clearMessages();
-    updateState({ options });
-  }, [updateState, clearMessages]);
-
   const handleTitleChange = useCallback((title: string) => {
     clearMessages();
     updateState({ title });
@@ -65,18 +50,15 @@ function App() {
     const payload: PDFPayload = {
       content: state.description,
       images: state.images,
-      options: state.options,
       title: state.title || undefined,
     };
 
     try {
-      const blob = await generatePDF(payload);
-      const filename = state.title || 'document';
-      downloadBlob(blob, filename);
+      await generatePDF(payload);
       
       updateState({ 
         isGenerating: false, 
-        success: `PDF ready. Saved as ${filename}.pdf` 
+        success: 'PDF generation request sent successfully! You will receive the PDF via the response webhook.' 
       });
       
       // Clear success message after 5 seconds
@@ -191,8 +173,6 @@ function App() {
             {/* Options */}
             <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6">
               <OptionsPanel
-                options={state.options}
-                onOptionsChange={handleOptionsChange}
                 title={state.title}
                 onTitleChange={handleTitleChange}
               />
@@ -216,7 +196,7 @@ function App() {
               {state.isGenerating ? (
                 <span className="flex items-center justify-center gap-3">
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Assembling your PDF…
+                  Sending request…
                 </span>
               ) : (
                 'Generate PDF'
