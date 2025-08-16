@@ -16,7 +16,7 @@ export const convertImageToBase64 = (file: File): Promise<string> => {
 };
 
 export const generatePDF = async (content: PDFContent): Promise<void> => {
-  const webhookUrl = 'https://n8n-93c3.onrender.com/webhook/59e8c7f0-f24f-47f8-b263-da82042e978d';
+  const webhookUrl = 'https://n8n-93c3.onrender.com/webhook-test/59e8c7f0-f24f-47f8-b263-da82042e978d';
   
   try {
     // Prepare the payload for the webhook
