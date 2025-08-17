@@ -168,6 +168,38 @@ function App() {
                 </div>
               </div>
             </div>
+
+            {/* Generate Button */}
+            <div className="mt-6">
+              <button
+                onClick={handleGeneratePDF}
+                disabled={!canGenerate}
+                className={`w-full px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform ${
+                  canGenerate
+                    ? 'bg-[#00FF85] hover:bg-[#00FF85]/90 hover:scale-105 text-[#0D0D0D] shadow-lg shadow-[#00FF85]/25'
+                    : 'bg-[#8A8A8A]/30 text-[#8A8A8A] cursor-not-allowed'
+                }`}
+                aria-describedby="generate-help"
+              >
+                {state.isGenerating ? (
+                  <span className="flex items-center justify-center gap-3">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Assembling your PDF…
+                  </span>
+                ) : (
+                  'Generate PDF'
+                )}
+              </button>
+              
+              {!canGenerate && !state.isGenerating && (
+                <p id="generate-help" className="text-center text-sm text-[#8A8A8A] mt-2">
+                  {!isDescriptionValid 
+                      ? 'Add a description (20-10,000 characters)'
+                      : 'Ready to generate'
+                  }
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Right Column - Images & Options */}
@@ -187,40 +219,6 @@ function App() {
                 onTitleChange={handleTitleChange}
               />
             </div>
-          </div>
-        </div>
-
-        {/* Generate Button - Sticky on Mobile */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#0D0D0D]/95 backdrop-blur-sm border-t border-white/10 lg:relative lg:bg-transparent lg:border-t-0 lg:p-0 lg:mt-8">
-          <div className="max-w-7xl mx-auto">
-            <button
-              onClick={handleGeneratePDF}
-              disabled={!canGenerate}
-              className={`w-full lg:w-auto lg:mx-auto lg:block px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform ${
-                canGenerate
-                  ? 'bg-[#00FF85] hover:bg-[#00FF85]/90 hover:scale-105 text-[#0D0D0D] shadow-lg shadow-[#00FF85]/25'
-                  : 'bg-[#8A8A8A]/30 text-[#8A8A8A] cursor-not-allowed'
-              }`}
-              aria-describedby="generate-help"
-            >
-              {state.isGenerating ? (
-                <span className="flex items-center justify-center gap-3">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Assembling your PDF…
-                </span>
-              ) : (
-                'Generate PDF'
-              )}
-            </button>
-            
-            {!canGenerate && !state.isGenerating && (
-              <p id="generate-help" className="text-center text-sm text-[#8A8A8A] mt-2">
-                {!isDescriptionValid 
-                    ? 'Add a description (20-10,000 characters)'
-                    : 'Ready to generate'
-                }
-              </p>
-            )}
           </div>
         </div>
       </main>
