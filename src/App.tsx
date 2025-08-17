@@ -181,7 +181,7 @@ function App() {
             </div>
 
             {/* Options */}
-            <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6">
+            <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6 mb-8">
               <OptionsPanel
                 title={state.title}
                 onTitleChange={handleTitleChange}
