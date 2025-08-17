@@ -227,7 +227,7 @@ function App() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 bg-[#151515]/80 backdrop-blur-sm mt-16 lg:mt-8">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6 pb-20 lg:pb-6">
           <p className="text-center text-sm text-[#8A8A8A]">
             PDF Builder © 2025
           </p>
