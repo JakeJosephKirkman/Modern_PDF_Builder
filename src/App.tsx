@@ -133,6 +133,14 @@ function App() {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Left Column - Description */}
           <div className="lg:col-span-1">
+            {/* Document Title */}
+            <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6 mb-6">
+              <OptionsPanel
+                title={state.title}
+                onTitleChange={handleTitleChange}
+              />
+            </div>
+
             <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6">
               <div className="space-y-4">
                 <label htmlFor="description" className="block text-sm font-semibold text-[#E0E0E0]">
@@ -212,13 +220,6 @@ function App() {
               />
             </div>
 
-            {/* Options */}
-            <div className="bg-[#151515]/80 backdrop-blur-sm rounded-2xl shadow-xl ring-1 ring-white/5 p-6 mb-8">
-              <OptionsPanel
-                title={state.title}
-                onTitleChange={handleTitleChange}
-              />
-            </div>
           </div>
         </div>
       </main>
